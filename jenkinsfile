@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-@Library(value="jenkins-ci-library", changelog=false)
+//@Library(value="jenkins-ci-library", changelog=false)
 
 
 //String AGENT_LABEL = TARGET_ENV.startsWith('prod') ? 'sky-webselfcare-prod' : 'sky-webselfcare-test'
