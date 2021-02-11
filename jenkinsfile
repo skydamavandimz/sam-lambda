@@ -34,7 +34,8 @@ pipeline {
       
         stage('package') {
             steps {
-                  withAWS(credentials: 'aws credentials', region: 'eu-west-1'){
+                  // withAWS(credentials: 'aws credentials', region: 'eu-west-1'){
+                  withCredentials([AWS Credentials(credentialsId: "aws credentials", region: 'eu-west-1')]) {
                           sh'aws s3 mb s3://myappmahla'
 
                           sh' sam package \
@@ -52,7 +53,9 @@ pipeline {
                         def targetBranch = TARGET_ENV.equals("prod") ? "master" : "develop"
                         git branch: "${targetBranch}", credentialsId: "${GIT_CREDENTIALS_ID}", url: "https://github.com/sky-uk/${PROJECT_NAME}-conf.git"
                     }*/
-                 withAWS(credentials: 'aws credentials', region: 'eu-west-1'){
+                // withAWS(credentials: 'aws credentials', region: 'eu-west-1'){
+                withCredentials([AWS Credentials(credentialsId: "aws credentials", region: 'eu-west-1')]) {
+
                        sh 'sam deploy \
                               --template-file packaged.yaml \
                               --stack-name aws-sam-ocr \
