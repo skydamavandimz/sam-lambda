@@ -9,7 +9,7 @@
 pipeline {
   agent any
     
-   /* environment {
+    environment {
 
         PROJECT_NAME = 'AWS-SAM-OCR'
         AWS_DEFAULT_REGION = 'eu-west-1'
@@ -22,7 +22,7 @@ pipeline {
         skipDefaultCheckout()
     }
 
-*/
+
 
     stages {
         stage('Checkout') {
@@ -39,7 +39,7 @@ pipeline {
                         --template-file template.yaml \
                         --output-template-file packaged.yaml \
                         --s3-bucket myappmahla'               
-
+            }
         } 
         stage('Deploy') {
             steps {
