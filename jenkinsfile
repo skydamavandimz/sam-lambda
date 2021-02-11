@@ -30,15 +30,15 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-               // checkout scm
-               sh 'sam init --location https://github.com/aws-samples/cookiecutter-aws-sam-s3-rekognition-dynamodb-python --no-input'
+                checkout scm
+               //sh 'sam init --location https://github.com/aws-samples/cookiecutter-aws-sam-s3-rekognition-dynamodb-python --no-input'
             }
         }
         stage('package') {
             steps {
-                  sh'aws --profile myaccount s3 mb s3://myappmahla'
+                  sh'aws s3 mb s3://myappmahla'
 
-                  sh' sam package --profile myaccount \
+                  sh' sam package \
                         --template-file template.yaml \
                         --output-template-file packaged.yaml \
                         --s3-bucket myappmahla'               
@@ -53,7 +53,6 @@ pipeline {
                     }*/
 
                  sh 'sam deploy \
-                        --profile myaccount\
                         --template-file packaged.yaml \
                         --stack-name aws-sam-ocr \
                         --capabilities CAPABILITY_IAM \
