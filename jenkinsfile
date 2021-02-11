@@ -7,11 +7,8 @@
 // github token: 7aa67437f634ae02e4b34b65ff04f9b8d8e6f787
 
 pipeline {
-
-    agent {
-        agent any
-    }
-
+    agent any
+    
     environment {
 
         PROJECT_NAME = 'AWS-SAM-OCR'
