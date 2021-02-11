@@ -1,0 +1,96 @@
+#!/usr/bin/env groovy
+
+@Library(value="jenkins-ci-library", changelog=false)
+
+
+//String AGENT_LABEL = TARGET_ENV.startsWith('prod') ? 'sky-webselfcare-prod' : 'sky-webselfcare-test'
+// github token: 7aa67437f634ae02e4b34b65ff04f9b8d8e6f787
+
+pipeline {
+
+    agent {
+        agent any
+    }
+
+    environment {
+
+        PROJECT_NAME = 'AWS-SAM-OCR'
+        AWS_DEFAULT_REGION = 'eu-west-1'
+ //     GIT_CREDENTIALS_ID = "a85c8c78-3cc3-4940-8a25-fd4ec90441a3"
+    }
+
+    options {
+        disableConcurrentBuilds()
+        timeout(time: 25, unit: 'MINUTES')
+        skipDefaultCheckout()
+    }
+
+
+
+    stages {
+        stage('Checkout') {
+            steps {
+               // checkout scm
+               sh 'sam init --location https://github.com/aws-samples/cookiecutter-aws-sam-s3-rekognition-dynamodb-python --no-input'
+            }
+        }
+        stage('package') {
+            steps {
+                  sh'aws --profile myaccount s3 mb s3://myappmahla'
+
+                  sh' sam package --profile myaccount \
+                        --template-file template.yaml \
+                        --output-template-file packaged.yaml \
+                        --s3-bucket myappmahla'               
+
+        } 
+        stage('Deploy') {
+            steps {
+     
+                   /* dir("${PROJECT_NAME}-conf") {
+                        def targetBranch = TARGET_ENV.equals("prod") ? "master" : "develop"
+                        git branch: "${targetBranch}", credentialsId: "${GIT_CREDENTIALS_ID}", url: "https://github.com/sky-uk/${PROJECT_NAME}-conf.git"
+                    }*/
+
+                 sh 'sam deploy \
+                        --profile myaccount\
+                        --template-file packaged.yaml \
+                        --stack-name aws-sam-ocr \
+                        --capabilities CAPABILITY_IAM \
+                        --region eu-west-1'
+
+                }
+            }
+        }
+        /*stage('Performance') {
+            steps {
+                script {
+                    if (TARGET_ENV.equals("dev") || TARGET_ENV.equals("test")) {
+                        def ENVIRONMENT = TARGET_ENV.equals("dev") ? 'DEV' : 'IT'
+                        build job: 'ita-selfcare-fe-performance', parameters: [string(name: 'ENVIRONMENT', value: ENVIRONMENT), string(name: 'PAGES', value: 'AllPage'), string(name: 'EXECUTION_NUMBER', value: '1')], propagate: false, wait: false
+                    }
+                }
+            }
+        }*/
+    }
+
+    post {
+        always {
+            echo '### DONE'
+            cleanWs()
+        }
+        success {
+            echo '### SUCCESS'
+          
+        }
+        failure {
+            echo '### FAILURE'
+    
+        }
+        aborted {
+            echo '### ABORTED'
+    
+        }
+    }
+}
+
