@@ -9,7 +9,7 @@
 pipeline {
   agent any
     
-    environment {
+   /* environment {
 
         PROJECT_NAME = 'AWS-SAM-OCR'
         AWS_DEFAULT_REGION = 'eu-west-1'
@@ -22,7 +22,7 @@ pipeline {
         skipDefaultCheckout()
     }
 
-
+*/
 
     stages {
         stage('Checkout') {
