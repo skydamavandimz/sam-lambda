@@ -37,7 +37,7 @@ pipeline {
                    withAWS(credentials: 'aws-credentials', region: 'eu-west-1'){
                           sh'aws s3 mb s3://myappmahla'
 
-                          sh' sam package \
+                          sh' sam.cmd package \
                                 --template-file template.yaml \
                                 --output-template-file packaged.yaml \
                                 --s3-bucket myappmahla'  
