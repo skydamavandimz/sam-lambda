@@ -31,15 +31,14 @@ pipeline {
                //sh 'sam init --location https://github.com/aws-samples/cookiecutter-aws-sam-s3-rekognition-dynamodb-python --no-input'
             }
         }
-
+/*
           stage('Install sam-cli') {
       steps {
         sh 'python3 -m venv venv && venv/bin/pip install aws-sam-cli'
         stash includes: '**/venv/**/*', name: 'venv'
       }
     }
-      
-   
+*/
         stage('package') {
             steps {
                    withAWS(credentials: 'aws-credentials', region: 'eu-west-1'){
